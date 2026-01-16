@@ -1,0 +1,302 @@
+# Marketing Flight Planner - Cursor AI Context
+
+## Project Overview
+This is an aviation-themed B2B marketing maturity assessment tool built with React + TypeScript + Vite.
+
+## Core Concept
+Users take a marketing assessment and get:
+- A "Plane Level" (Grounded → Puddle Jumper → Regional Jet → Commercial Jet → Airbus 380)
+- Flight Miles (gamification points)
+- Unlocked routes to different marketing capabilities (visualized as cities on a world map)
+- Actionable recommendations based on their maturity
+
+## Architecture
+
+### State Management
+- **Single source of truth:** `src/context/UserContext.tsx`
+- All calculations happen automatically when state changes
+- Data persists via localStorage
+- Context provides: profile, assessment responses, scores, plane level, flight miles, unlocked routes
+
+### Scoring System
+- Combined Score = (Assessment Average × 0.7) + (Tech Stack Average × 0.3)
+- Assessment: 10 questions, 0-100 points each
+- Tech Stack: Tools rated 1-10 for utilization
+- Score determines plane level and which routes unlock
+
+### Data Model
+- Cities = Marketing Functions (13 total: Content, Social, ABM, Demand Gen, etc.)
+- Routes = Growth Paths (7 total: content→demandgen, content→abm, ai→sales, etc.)
+- Each route has score + miles requirements
+- Routes unlock progressively as user improves
+
+## File Structure
+```
+src/
+├── App.tsx                      # Router setup
+├── main.tsx                     # Entry point
+├── index.css                    # Tailwind imports
+├── context/
+│   └── UserContext.tsx          # THE BRAIN - all state + calculations
+├── data/
+│   └── staticData.ts            # Cities, routes, questions, scenarios
+├── pages/
+│   ├── Home.tsx                 # Profile + 3 booking paths
+│   ├── Assessment.tsx           # 10-question form
+│   ├── Results.tsx              # Score visualization (altimeter, REAO, recommendations)
+│   └── PlaceholderPages.tsx     # Stub pages for Phase 2
+└── components/
+    └── Layout.tsx               # Nav + footer wrapper
+```
+
+## What's Working (Phase 1 ✅)
+- ✅ Home page with profile input
+- ✅ Three booking paths (Manual, Quick Scan, Deep Dive)
+- ✅ 10-question assessment
+- ✅ Automatic scoring calculation
+- ✅ Plane level assignment
+- ✅ Flight miles tracking
+- ✅ Route unlocking logic
+- ✅ Results visualization (altimeter, REAO gauges, recommendations)
+- ✅ Navigation between pages
+- ✅ Data persistence (localStorage)
+
+## What's NOT Built Yet (Phase 2 🚧)
+
+### 1. Journey Map Page
+**Location:** Currently a placeholder in `PlaceholderPages.tsx`
+**Needs:** 
+- Interactive world map (Mapbox GL JS or similar)
+- 13 cities plotted as glowing cyan nodes with coordinates from `staticData.ts`
+- 7 routes drawn as arcing lines between cities
+- Color coding based on user's unlocked status:
+  - Green = Unlocked (user meets requirements)
+  - Yellow = Partially available (close to requirements)
+  - Gray = Locked (doesn't meet requirements)
+- Click route → Modal shows waypoints and milestones
+- Must read user's current score from UserContext to determine colors
+
+**How to implement:**
+```typescript
+// In JourneyMap.tsx
+import { useUser } from '../context/UserContext';
+import { CITIES, ROUTES } from '../data/staticData';
+
+const { getRouteStatus } = useUser();
+
+ROUTES.map(route => {
+  const status = getRouteStatus(route.id); // Returns 'unlocked' | 'partial' | 'locked'
+  // Draw route with appropriate color
+});
+```
+
+### 2. Scenarios Page
+**Location:** Currently a placeholder
+**Needs:**
+- Display 3 pre-built scenarios from `staticData.ts` (PRE_BUILT_SCENARIOS array)
+- Each scenario card shows:
+  - Title
+  - Description  
+  - Target audience
+  - Estimated duration
+  - Visual icon
+- Click card → Navigate to `/scenarios/:id`
+
+### 3. Scenario Detail Page
+**Location:** Currently a placeholder
+**Needs:**
+- Read scenario ID from URL params
+- Fetch full scenario data from `staticData.ts`
+- Display:
+  - 3-phase timeline (Foundation → Growth → Scale)
+  - Task checklist for each phase
+  - Deliverables list
+  - Effort estimate
+  - "Start This Journey" CTA
+
+### 4. Tech Stack Audit Page
+**Location:** Currently a placeholder
+**Needs:**
+- Form with tool categories (CRM, Marketing Automation, Analytics, etc.)
+- Each tool has:
+  - Tool name input
+  - Utilization slider (1-10)
+- Calculate average utilization score
+- Call `setTechStack()` from UserContext
+- This automatically recalculates combined score (30% weight to tech stack)
+- Navigate to Results page with boosted score
+
+**Already implemented in UserContext:**
+```typescript
+setTechStack: (stack: TechStackItem[]) => {
+  // Calculates average tech score
+  // Updates combinedScore automatically
+  // User sees immediate improvement in Results page
+}
+```
+
+### 5. What-If Simulator Page
+**Location:** Currently a placeholder
+**Needs:**
+- Interactive sliders for:
+  - Budget ($10K - $1M)
+  - Team size (1-50 people)
+  - Tool count (0-20 tools)
+- Real-time score projection based on inputs
+- Show "Routes You'd Unlock" if they hit projected score
+- Comparison table: Current State vs Projected State
+- "See Full Impact" button
+
+### 6. Operations Center
+**Location:** Currently a placeholder
+**Needs:**
+- Dashboard with 4 sections:
+  1. Current Status Widget (plane level, score, miles)
+  2. Active Journeys (if user started any scenarios)
+  3. Recent Activity Feed (assessment taken, routes unlocked, etc.)
+  4. Quick Actions (Retake Assessment, View Map, Download Report)
+
+## Key Functions in UserContext
+
+```typescript
+// Profile Management
+setProfile(profile: UserProfile): void
+
+// Assessment Submission
+submitQuickAssessment(responses: AssessmentResponse[]): void
+submitDeepAssessment(responses: AssessmentResponse[]): void
+
+// Tech Stack
+setTechStack(stack: TechStackItem[]): void
+
+// Calculations (happen automatically)
+calculateCombinedScore(): number
+calculatePlaneLevel(): string
+calculateFlightMiles(): number
+calculateREAO(): { readiness, efficiency, alignment, opportunity }
+calculateUnlockedRoutes(): string[]
+
+// Route Status Check
+getRouteStatus(routeId: string): 'unlocked' | 'partial' | 'locked'
+```
+
+## Static Data Available
+
+```typescript
+// In src/data/staticData.ts
+
+CITIES: Array<{
+  id: string;
+  name: string;           // e.g., "New York City"
+  function: string;       // e.g., "Content Marketing"
+  lat: number;
+  lng: number;
+  description: string;
+}>
+
+ROUTES: Array<{
+  id: string;
+  from: string;          // City ID
+  to: string;            // City ID
+  name: string;
+  description: string;
+  waypoints: string[];   // Milestones along the route
+  estimatedDuration: string;
+}>
+
+QUICK_ASSESSMENT_QUESTIONS: Array<{
+  id: string;
+  category: string;
+  question: string;
+  description: string;
+  options: Array<{ value: number; label: string }>;
+}>
+
+PRE_BUILT_SCENARIOS: Array<{
+  id: string;
+  title: string;
+  description: string;
+  targetAudience: string;
+  phases: Array<{
+    name: string;
+    duration: string;
+    tasks: string[];
+    deliverables: string[];
+  }>;
+}>
+```
+
+## Code Style Preferences
+- TypeScript strict mode
+- Functional components only (no class components)
+- Tailwind CSS for styling (dark theme with cyan accents)
+- Lucide React for icons
+- Recharts for data visualization
+- Keep files under 300 lines when possible
+- Extract reusable components into separate files
+
+## Color Palette
+- Background: slate-950 (#020617)
+- Primary: cyan-500 (#06b6d4)
+- Secondary: slate-800 (#1e293b)
+- Text: white / slate-300
+- Success: emerald-500
+- Warning: yellow-500
+- Danger: red-500
+
+## Important Rules
+1. NEVER modify UserContext calculation logic without understanding the full impact
+2. ALWAYS use the UserContext hook to access user data, don't create separate state
+3. Route requirements are defined in UserContext (routeRequirements object)
+4. Score thresholds for plane levels are in PLANE_LEVELS array in UserContext
+5. All user data persists to localStorage automatically - don't add duplicate persistence
+
+## Testing Checklist
+Before marking any feature complete:
+- [ ] User data flows from UserContext correctly
+- [ ] Navigation works (forward and back)
+- [ ] Mobile responsive
+- [ ] No console errors
+- [ ] Data persists after page refresh
+- [ ] Calculations are accurate
+
+## Phase 2 Build Priority
+1. Scenarios + Scenario Detail (easiest, high impact)
+2. Tech Stack Audit (adds value to core flow)
+3. Operations Center (ties everything together)
+4. What-If Simulator (engagement tool)
+5. Journey Map (most complex, most impressive)
+
+## Questions to Ask Before Building
+1. "Does this need to read from UserContext?"
+2. "Will this trigger a score recalculation?"
+3. "Should this persist to localStorage?"
+4. "What happens if the user hasn't taken the assessment yet?"
+
+## Common Gotchas
+- Don't forget to wrap new pages in the Layout component
+- Add new routes to App.tsx router
+- If a page needs user data, check if assessment is completed first
+- Route IDs in ROUTES must match keys in routeRequirements object
+- Plane level thresholds are inclusive ranges
+
+## How to Add a New Feature
+1. Check if UserContext needs new state/functions
+2. Create the component/page file
+3. Import necessary data from staticData.ts
+4. Use UserContext hook for user data
+5. Add route to App.tsx
+6. Test the full user flow
+7. Verify mobile responsiveness
+
+## Links to Documentation
+- React: https://react.dev
+- TypeScript: https://www.typescriptlang.org/docs
+- Vite: https://vitejs.dev
+- Tailwind CSS: https://tailwindcss.com/docs
+- Recharts: https://recharts.org/en-US
+- Lucide Icons: https://lucide.dev
+
+---
+
+When implementing Phase 2 features, reference this context file and the existing working code in Phase 1 (Home, Assessment, Results) as examples.

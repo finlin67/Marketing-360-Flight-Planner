@@ -1,0 +1,18 @@
+# Minimal .htaccess for Firefox compatibility
+# Only sets MIME types - safest option
+
+# JavaScript files (Firefox requirement)
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType application/javascript .mjs
+</IfModule>
+
+# CSS files
+<IfModule mod_mime.c>
+  AddType text/css .css
+</IfModule>
+
+# SVG files
+<IfModule mod_mime.c>
+  AddType image/svg+xml .svg
+</IfModule>

@@ -1,0 +1,27 @@
+# Nginx configuration for Firefox compatibility
+# Add this to your Nginx server block or site configuration
+
+# Ensure proper MIME types for JavaScript modules (Firefox requirement)
+location ~* \.(js|mjs)$ {
+    add_header Content-Type application/javascript;
+    add_header Access-Control-Allow-Origin *;
+}
+
+# CSS files
+location ~* \.css$ {
+    add_header Content-Type text/css;
+    add_header Access-Control-Allow-Origin *;
+}
+
+# SVG files
+location ~* \.svg$ {
+    add_header Content-Type image/svg+xml;
+    add_header Access-Control-Allow-Origin *;
+}
+
+# Cache control for assets
+location ~* \.(js|css|svg|woff|woff2|ttf|eot)$ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+}
+
