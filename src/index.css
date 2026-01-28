@@ -124,6 +124,128 @@ body {
   }
 }
 
+/* Landing page: particles & flight trails */
+@keyframes float-particle {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translate(8px, -12px) scale(1.1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-6px, -20px) scale(0.9);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(10px, -8px) scale(1.05);
+    opacity: 0.6;
+  }
+}
+
+@keyframes trail-dash {
+  0% {
+    stroke-dashoffset: 24;
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.2;
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(139, 92, 246, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.5), 0 0 60px rgba(139, 92, 246, 0.25);
+  }
+}
+
+@keyframes gauge-sweep {
+  0% {
+    stroke-dashoffset: 180;
+  }
+  100% {
+    stroke-dashoffset: 60;
+  }
+}
+
+/* Radar sweep - rotating wedge */
+@keyframes radar-sweep {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* CTA pulsing glow - stronger than glow-pulse */
+@keyframes cta-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 24px rgba(6, 182, 212, 0.4), 0 0 48px rgba(6, 182, 212, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 36px rgba(6, 182, 212, 0.6), 0 0 72px rgba(6, 182, 212, 0.3);
+  }
+}
+
+/* Pre-Flight: checkmark draw */
+@keyframes checkmark-draw {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes checkmark-draw-sm {
+  0% {
+    stroke-dashoffset: 14;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Pre-Flight: validation shake */
+@keyframes validation-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-checkmark-draw {
+  animation: checkmark-draw 0.4s ease-out forwards;
+}
+
+.animate-checkmark-draw-sm {
+  animation: checkmark-draw-sm 0.35s ease-out forwards;
+}
+
+.animate-validation-shake {
+  animation: validation-shake 0.5s ease-in-out;
+}
+
 /* Airport Board Flip Animation */
 @keyframes flip-front {
   0% {
@@ -193,6 +315,81 @@ body {
 
 .slide-in-from-top-2 {
   animation: slide-in-from-top 0.2s ease-out forwards;
+}
+
+/* Landing: layered gradient (navy → deep blue → purple) */
+.bg-gradient-flight {
+  background: linear-gradient(
+    180deg,
+    #0f172a 0%,
+    #0c1222 20%,
+    #0a0f1a 40%,
+    #1e1b4b 60%,
+    #1e3a5f 80%,
+    #312e81 100%
+  );
+}
+
+.bg-gradient-flight-section {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.97) 0%,
+    rgba(30, 58, 95, 0.4) 50%,
+    rgba(49, 46, 129, 0.3) 100%
+  );
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+}
+
+.glass-card:hover {
+  border-color: rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.12);
+}
+
+/* Glow utilities */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.35), 0 0 40px rgba(6, 182, 212, 0.15);
+}
+
+.glow-cyan-hover:hover {
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.45), 0 0 48px rgba(6, 182, 212, 0.2);
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-float-particle {
+  animation: float-particle 8s ease-in-out infinite;
+}
+
+.animate-trail-dash {
+  animation: trail-dash 4s ease-in-out infinite;
+}
+
+.animate-gauge-sweep {
+  animation: gauge-sweep 4s ease-in-out infinite;
+}
+
+.radar-sweep {
+  animation: radar-sweep 8s linear infinite;
+}
+
+.animate-cta-glow-pulse {
+  animation: cta-glow-pulse 2.5s ease-in-out infinite;
 }
 
 /* Smooth scrolling */

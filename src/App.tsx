@@ -4,6 +4,7 @@ import { Layout } from './components/Layout';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './pages/Home';
+import { PreFlightCheck } from './pages/PreFlightCheck';
 import { Assessment } from './pages/Assessment';
 import { Assessments } from './pages/Assessments';
 import { Results } from './pages/Results';
@@ -42,6 +43,7 @@ const App: React.FC = () => {
             
               {/* Assessment Routes */}
             <Route path="/assessments" element={<Assessments />} />
+            <Route path="/assessment/preflight" element={<PreFlightCheck />} />
               <Route path="/assessment" element={<Assessment type="quick" />} />
             <Route path="/assessment/quick" element={<Assessment type="quick" />} />
             <Route path="/assessment/deep" element={<Assessment type="deep" />} />
