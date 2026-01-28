@@ -1,3 +1,4 @@
+<img width="1204" height="590" alt="image" src="https://github.com/user-attachments/assets/806ad8eb-bd86-4317-be9d-acd42db7e996" />
 # Marketing Flight Planner - Complete Implementation Guide
 
 ## 🎯 What We've Built
